@@ -5,6 +5,7 @@ import inquirer
 from sklearn.metrics import r2_score, accuracy_score, confusion_matrix
 
 dataset = pd.read_csv("data.csv")
+dataset = dataset.drop_duplicates()
 X = dataset.iloc[:, 2:-1].values
 y = dataset.iloc[:, 1].values
 
@@ -13,6 +14,13 @@ from sklearn.preprocessing import LabelEncoder
 
 le = LabelEncoder()
 y = le.fit_transform(y)
+
+# Taking care of missing data
+from sklearn.impute import SimpleImputer
+
+imputer = SimpleImputer(missing_values=np.nan, strategy='mean')
+imputer.fit(X)
+X = imputer.transform(X)
 
 # split dataset into the Training and Test
 from sklearn.model_selection import train_test_split
